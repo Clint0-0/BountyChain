@@ -1,0 +1,25 @@
+{
+  "name": "bountychain-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "gen-env": "node scripts/gen-env.js",
+    "test": "node --test test/api.test.js",
+    "e2e": "node scripts/e2e.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "ethers": "^6.17.0",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.2"
+  }
+}

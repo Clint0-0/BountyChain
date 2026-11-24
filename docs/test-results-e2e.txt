@@ -1,0 +1,87 @@
+
+> bountychain-backend@1.0.0 e2e
+> node scripts/e2e.js
+
+Contract 0x5FbDB2315678afecb367f032d93F642f64180aa3 on chain 31337
+
+[1] Admin registers organization & dispute resolver
+    ✔ Stranger registerOrganization rejected (OwnableUnauthorizedAccount)
+    ✔ registerOrganization — tx 0x27701b607df30eb8d01e220a019a56c490cc5f3bac09292ad2edeec89c99c468 (block 2)
+    ✔ setDisputeResolver — tx 0xc944764c3f38958c6ea778f9184b70550d2911eb8d33cbba3377a96e7bb30691 (block 3)
+    ✔ Admin as resolver rejected (ConflictOfInterest)
+
+[2] Organization publishes metadata off-chain, creates & funds program on-chain
+    ✔ Stranger cannot publish program metadata (403)
+    ✔ Stranger createProgram rejected (NotOrganization)
+    ✔ createProgram (5 ETH pool) — tx 0x605b59ebba3445ce6dd02b9913015a2c83fff4757f752c1c5f7d5eaf958e8106 (block 4)
+    ✔ fundProgram +1 ETH — tx 0x0376564ec3e40e21df9c38bcee88ecfc1a5c70ae88b7571d29382ef5f05df7d9 (block 5)
+    ✔ assignVerifier — tx 0xb6210916c53e148e940e887cd68fca75668f761d13c6b465222e3196ac26f60c (block 6)
+    ✔ Program #1 pool = 6.0 ETH
+
+[3] Researcher submits encrypted report off-chain and anchors hash on-chain
+    ✔ submitReport "SQL injection in orders API" — tx 0xe25fb5c09e4676928f465f88500ee546ed708b94b7ddfcdeb285d0c26bc316ef (block 7)
+    ✔ On-chain reportHash matches backend hash 0x6610e4ccc16f285b…
+    ✔ Verifier submits to own program rejected (ConflictOfInterest)
+    ✔ Duplicate hash rejected (DuplicateReport)
+
+[4] Confidential access control
+    ✔ Stranger denied (403)
+    ✔ Resolver denied while no dispute exists (403)
+    ✔ Unauthenticated denied (401)
+    ✔ researcher reads report, integrity verified against chain
+    ✔ organization reads report, integrity verified against chain
+    ✔ verifier reads report, integrity verified against chain
+
+[5] Verifier approves with severity High → contract reserves tier reward
+    ✔ Admin approves rejected (NotVerifier)
+    ✔ Org approves rejected (NotVerifier)
+    ✔ approveReport(High) — tx 0x544e5bda251ab88ee303477c4b80e5453187f6ab062d16c0f87f06e5313c7857 (block 8)
+    ✔ RewardReserved = 1 ETH (High tier)
+    ✔ Stranger claims rejected (NotResearcher)
+    ✔ claimReward — tx 0x28bd45414acee17178f9a83d3fd56eae0d4799c0349e20543712290818def572 (block 9)
+    ✔ Researcher balance increased by exactly 1 ETH (+gas accounted)
+    ✔ Double claim rejected (InvalidStatus)
+
+[6] Rejected report → dispute → resolver overturns (Critical) → claim
+    ✔ submitReport "Auth bypass via JWT alg none" — tx 0x06b3266de05929bf301a51cd885a80e114d4fc42dbe7df0de5ab2e6251df91b6 (block 11)
+    ✔ On-chain reportHash matches backend hash 0x1cf86b9e458acf1d…
+    ✔ rejectReport — tx 0x04e0a4e0f01ffd5b0c419691fac949daf52beb040b423fae99c9ef2d63116620 (block 12)
+    ✔ Claim rejected rejected (InvalidStatus)
+    ✔ Stranger disputes rejected (NotResearcher)
+    ✔ raiseDispute — tx 0x5f61d348558e86c57aac0dd21573ed62670857e8e1d29a79983ab31f4301c8df (block 13)
+    ✔ Duplicate dispute rejected (DisputeAlreadyExists)
+    ✔ Resolver can now read report + verifier note + evidence
+    ✔ Verifier resolves rejected (NotDisputeResolver)
+    ✔ resolveDispute(overturn, Critical) — tx 0xa82f4b8280a26e0b243ce6ff60662861ede4b69cd85f4ef4634776a426088546 (block 14)
+    ✔ Dispute status Overturned recorded on-chain
+    ✔ claimReward (2 ETH) — tx 0x102c5386a9a671eabdf6be28e71bc3837f397ec06322a44692ca73617e9b3f54 (block 15)
+    ✔ Reopen resolved dispute rejected (DisputeAlreadyExists)
+
+[7] Rejected report → dispute → resolver upholds
+    ✔ submitReport "Self-XSS in search box" — tx 0x89bbe085d4b4c8f0b6f359c55827814f407ea9967adcc6c37be5215cfeecb718 (block 16)
+    ✔ On-chain reportHash matches backend hash 0x7107dec666406dc5…
+    ✔ rejectReport — tx 0xc058eb8c40729a12cf2e3ef8155613e7bdabb56ff955c89bb05a477302d127cc (block 17)
+    ✔ raiseDispute — tx 0xe59275dd34b4e52d4bda229764a937baee95db9eee999014c9ae3ec49ecd15c5 (block 18)
+    ✔ resolveDispute(uphold) — tx 0x8660f5cd8f4c06086e79cbb35bd2421c52eefd8764c40efc8b2ed11e540c587e (block 19)
+    ✔ Submission status RejectionUpheld
+
+[8] Final accounting + events
+    ✔ available 3.0 / reserved 0.0 / paid 3.0 ETH
+    ✔ Contract balance 3.0 ETH (sum over all programs)
+    Events emitted: {
+  OwnershipTransferred: 1,
+  OrganizationRegistered: 1,
+  DisputeResolverChanged: 1,
+  ProgramCreated: 1,
+  ProgramFunded: 2,
+  VerifierAssigned: 1,
+  ReportSubmitted: 3,
+  ReportApproved: 1,
+  RewardReserved: 2,
+  RewardClaimed: 2,
+  ReportRejected: 2,
+  DisputeRaised: 2,
+  DisputeResolved: 2
+}
+
+E2E PASSED ✅

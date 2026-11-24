@@ -1,0 +1,38 @@
+# Subtest: wallet-signature authentication
+    ok 1 - valid signature yields a JWT
+    ok 2 - signature from a different wallet is rejected
+    ok 3 - nonce cannot be replayed
+    ok 4 - protected routes require a valid token
+    ok 5 - missing body on verify returns 400, not 500
+    ok 6 - invalid address rejected
+ok 1 - wallet-signature authentication
+# Subtest: report storage
+    ok 1 - report is encrypted at rest and hash is deterministic over canonical JSON
+    ok 2 - same content submitted twice gets different hashes (random salt)
+    ok 3 - validation errors
+    ok 4 - program owner and program verifiers cannot submit reports
+ok 2 - report storage
+# Subtest: restricted report access
+    ok 1 - researcher, org owner and assigned verifier can read; integrity verified
+    ok 2 - stranger, verifier of another program and resolver (no dispute) are denied
+    ok 3 - resolver gains access once a dispute exists
+    ok 4 - removed verifier loses access
+    ok 5 - tampered on-chain hash is detected as integrity failure / not found
+    ok 6 - tampered ciphertext in DB fails decryption (GCM auth)
+    ok 7 - titles endpoint only returns authorized submissions
+ok 3 - restricted report access
+# Subtest: notes and evidence documents
+    ok 1 - only the assigned verifier can add a review note while Submitted
+    ok 2 - dispute evidence only by researcher on Rejected; resolution note only by resolver on Disputed
+    ok 3 - invalid document kind rejected
+ok 4 - notes and evidence documents
+# Subtest: chain failures
+    ok 1 - missing contract / node down maps to 503
+ok 5 - chain failures
+# Subtest: program metadata
+    ok 1 - only authorized organizations can publish; anyone can read with integrity check
+    ok 2 - invalid metadata rejected
+ok 6 - program metadata
+# tests 23
+# pass 23
+# fail 0

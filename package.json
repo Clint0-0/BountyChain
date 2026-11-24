@@ -1,0 +1,16 @@
+{
+  "name": "bountychain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BountyChain - decentralized bug bounty platform (academic project)",
+  "scripts": {
+    "setup": "npm --prefix blockchain install && npm --prefix backend install && npm --prefix backend run gen-env && npm --prefix frontend install",
+    "compile": "npm --prefix blockchain run compile",
+    "test": "npm --prefix blockchain test && npm --prefix backend test",
+    "node": "npm --prefix blockchain run node",
+    "deploy": "npm --prefix blockchain run deploy:local",
+    "backend": "npm --prefix backend start",
+    "frontend": "npm --prefix frontend run dev",
+    "e2e": "npm --prefix backend run e2e"
+  }
+}

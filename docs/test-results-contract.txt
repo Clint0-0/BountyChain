@@ -1,0 +1,68 @@
+
+
+  BountyPlatform
+    Organization
+      ✔ admin can register an organization (513ms)
+      ✔ unauthorized wallets cannot register organizations
+      ✔ rejects zero address, empty name, duplicates and admin-as-org
+      ✔ revoked organizations cannot create programs; re-registration does not duplicate list
+      ✔ unauthorized wallets cannot create programs
+      ✔ admin can set dispute resolver but not to itself or zero
+      ✔ dispute window bounds are enforced
+    Bounty programs
+      ✔ authorized organizations can create programs with initial funding
+      ✔ programs can receive additional funds (owner only)
+      ✔ empty or invalid program data is rejected
+      ✔ inactive programs cannot accept submissions
+      ✔ expired programs cannot accept submissions
+      ✔ not-yet-started programs cannot accept submissions
+      ✔ plain ETH transfers to the contract are rejected
+    Verifier
+      ✔ organizations can assign and remove verifiers
+      ✔ rejects invalid verifier management
+      ✔ unauthorized verifiers cannot review submissions (incl. admin and org)
+      ✔ removed verifier loses review rights
+      ✔ verifiers cannot submit to their own program
+      ✔ verifiers cannot approve their own submissions (assigned after submitting)
+      ✔ invalid review decisions are rejected (40ms)
+    Report submission
+      ✔ researchers can submit reports to active programs and hash is recorded
+      ✔ duplicate report hashes are rejected (even from another researcher) (41ms)
+      ✔ zero hash and unknown programs are rejected
+      ✔ sensitive report contents are not stored in the smart contract
+    Rewards
+      ✔ approval reserves exactly the tier reward and researcher can claim it (48ms)
+      ✔ each severity maps to the predefined tier
+      ✔ rejected researchers cannot claim rewards
+      ✔ pending (unreviewed) reports cannot be claimed
+      ✔ unauthorized users cannot claim another researcher's reward
+      ✔ rewards cannot be claimed twice
+      ✔ insufficient reward funding prevents an invalid payout
+      ✔ reward accounting remains correct after claims (38ms)
+      ✔ failed transfer reverts and leaves accounting intact (contract researcher without receive)
+      ✔ reentrant claim attempts are blocked
+      ✔ organisation can withdraw only unreserved funds after program closes and windows pass
+    Dispute resolution
+      ✔ researchers can dispute eligible rejected reports
+      ✔ unauthorized users cannot raise disputes
+      ✔ only rejected reports within the window and with evidence can be disputed
+      ✔ duplicate disputes are prevented
+      ✔ only the dispute resolver can finalize a dispute
+      ✔ resolver can uphold the rejection (final, no reward)
+      ✔ resolved disputes cannot be reopened
+      ✔ successful dispute outcomes follow the correct reward workflow
+      ✔ resolver cannot resolve a dispute on their own submission
+      ✔ dispute overturn also respects pool limits
+    Regression (bug-fix) tests
+      ✔ dispute window is fixed at rejection time (admin change is not retroactive)
+      ✔ withdraw lock follows the latest stored dispute deadline
+      ✔ organisation cannot assign itself as verifier
+      ✔ resolver cannot be the original reviewer, the program owner or a program verifier (44ms)
+      ✔ admin role cannot be transferred to an organisation, resolver or verifier
+      ✔ ReportApproved is emitted before RewardReserved (readable timelines)
+    Roles view
+      ✔ getRoles reports on-chain roles (48ms)
+
+
+  53 passing (1s)
+
