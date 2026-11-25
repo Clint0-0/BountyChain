@@ -1,5 +1,5 @@
 // SQLite storage. Only off-chain data lives here; ids/hashes link it to the chain.
-const Database = require("better-sqlite3");
+const initSqlJs = require("sql.js");
 const fs = require("fs");
 const path = require("path");
 
@@ -49,13 +49,70 @@ CREATE TABLE IF NOT EXISTS access_log (
 );
 `;
 
+// sql.js = SQLite compiled to WebAssembly: no native build, works on any
+// Node version / OS. A tiny wrapper gives the better-sqlite3 style API used
+// by the app (prepare().run/get/all) and persists the DB file after writes.
+let SQL = null;
+async function initDb() {
+  if (!SQL) SQL = await initSqlJs();
+}
+
 function openDb(file) {
-  if (file !== ":memory:") fs.mkdirSync(path.dirname(file), { recursive: true });
-  const db = new Database(file);
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
-  db.exec(SCHEMA);
+  if (!SQL) throw new Error("initDb() must be awaited before openDb()");
+  const persistent = file !== ":memory:";
+  if (persistent) fs.mkdirSync(path.dirname(file), { recursive: true });
+  const raw = persistent && fs.existsSync(file) ? new SQL.Database(fs.readFileSync(file)) : new SQL.Database();
+  const save = () => {
+    if (!persistent) return;
+    const tmp = file + ".tmp";
+    fs.writeFileSync(tmp, Buffer.from(raw.export()));
+    fs.renameSync(tmp, file); // atomic replace
+  };
+  raw.run("PRAGMA foreign_keys = ON");
+  raw.exec(SCHEMA);
+  save();
+
+  const db = {
+    exec(sql) {
+      raw.exec(sql);
+      save();
+    },
+    prepare(sql) {
+      return {
+        run(...params) {
+          raw.run(sql, params);
+          const changes = raw.getRowsModified();
+          save();
+          return { changes };
+        },
+        get(...params) {
+          const st = raw.prepare(sql);
+          try {
+            st.bind(params);
+            return st.step() ? st.getAsObject() : undefined;
+          } finally {
+            st.free();
+          }
+        },
+        all(...params) {
+          const st = raw.prepare(sql);
+          const rows = [];
+          try {
+            st.bind(params);
+            while (st.step()) rows.push(st.getAsObject());
+          } finally {
+            st.free();
+          }
+          return rows;
+        },
+      };
+    },
+    close() {
+      save();
+      raw.close();
+    },
+  };
   return db;
 }
 
-module.exports = { openDb };
+module.exports = { initDb, openDb };

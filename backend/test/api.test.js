@@ -1,12 +1,12 @@
 // Backend authorisation tests. The chain reader is mocked so these run without
 // a blockchain; the real chain path is covered by scripts/e2e (integration).
-const { test, describe, beforeEach } = require("node:test");
+const { test, describe, before, beforeEach } = require("node:test");
 const assert = require("node:assert/strict");
 const crypto = require("crypto");
 const request = require("supertest");
 const { Wallet } = require("ethers");
 const { createApp } = require("../src/app");
-const { openDb } = require("../src/db");
+const { initDb, openDb } = require("../src/db");
 
 const W = {
   org: Wallet.createRandom(),
@@ -75,6 +75,10 @@ async function submit(token, body = REPORT) {
   chain.state.submissions[id] = { id, programId: body.programId, researcher: a(W.researcher), reportHash: res.body.reportHash, status: "Submitted", reviewNoteHash: "0x" + "0".repeat(64) };
   return { id, reportHash: res.body.reportHash };
 }
+
+before(async () => {
+  await initDb();
+});
 
 beforeEach(() => {
   db = openDb(":memory:");

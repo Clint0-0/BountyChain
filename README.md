@@ -5,7 +5,7 @@ Academic Blockchain Technology mini-project. Organizations lock bounty rewards i
 | Layer | Tech |
 |---|---|
 | Smart contract | Solidity 0.8.24, Hardhat 2, OpenZeppelin 5 (`Ownable2Step`, `ReentrancyGuard`) |
-| Backend | Node.js, Express, SQLite (better-sqlite3), ethers v6, JWT, AES-256-GCM |
+| Backend | Node.js, Express, SQLite (sql.js, WebAssembly), ethers v6, JWT, AES-256-GCM |
 | Frontend | React 18 + Vite, ethers v6, MetaMask |
 | Tests | Hardhat/Mocha/Chai (53), Node test runner + supertest (23), live E2E script |
 
@@ -27,7 +27,7 @@ bountychain/
 - **MetaMask** browser extension (Chrome / Edge / Firefox / Brave)
 - Git (optional)
 
-Windows note: `better-sqlite3` ships prebuilt binaries for Node 20/22 on Windows x64, so no compiler is needed. If `npm install` in `backend` ever tries to compile, install Node LTS (not "Current").
+Windows note: the backend uses `sql.js` (SQLite compiled to WebAssembly), so there are no native modules: no Visual Studio / C++ build tools are needed on any Node version.
 
 ## 2. Install (once)
 

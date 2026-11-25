@@ -1,10 +1,11 @@
 const { loadConfig } = require("./config");
-const { openDb } = require("./db");
+const { initDb, openDb } = require("./db");
 const { createChainReader } = require("./chain");
 const { createApp } = require("./app");
 
 async function main() {
   const config = loadConfig();
+  await initDb();
   const db = openDb(config.dbPath);
   const chain = createChainReader(config);
   try {

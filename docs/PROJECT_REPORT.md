@@ -55,7 +55,7 @@ Because everything off-chain is hashed with a canonical JSON serialisation, anyo
 | Wallet | MetaMask (EIP-1193) | Standard browser wallet |
 | Frontend | React 18 + Vite, React Router | Fast dev server, component model |
 | Backend | Node.js + Express 5 | Simple REST API |
-| Database | SQLite (better-sqlite3) | Zero-config, single file, works on Windows |
+| Database | SQLite via sql.js (WebAssembly) | Zero-config single file, no native build, works on any OS / Node version |
 | Crypto | Node `crypto` AES-256-GCM, JWT (HS256) | No paid services |
 | Testing | Hardhat (Mocha/Chai), `node:test` + supertest, Playwright run for UI flows | |
 
