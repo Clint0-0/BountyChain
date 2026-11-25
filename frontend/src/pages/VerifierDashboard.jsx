@@ -4,6 +4,7 @@ import { useTitles } from "../lib/useTitles";
 import { Gate, Section, Stat, Loading, ErrorBox } from "../components/ui";
 import SubmissionTable from "../components/SubmissionTable";
 import ProgramCard from "../components/ProgramCard";
+import Icon from "../components/icons";
 
 export default function VerifierDashboard() {
   return (
@@ -35,7 +36,7 @@ function Inner() {
           <h1>Verifier dashboard</h1>
           <p className="muted">Review reports for programs you are assigned to. Your decision is recorded on-chain.</p>
         </div>
-        {!unlocked && data.subs.length > 0 && <button className="btn btn-outline" onClick={() => unlock().catch(() => {})}>🔓 Unlock report titles</button>}
+        {!unlocked && data.subs.length > 0 && <button className="btn btn-outline" onClick={() => unlock().catch(() => {})}><Icon name="unlock" size={15} /> Unlock report titles</button>}
       </div>
       <div className="stats">
         <Stat label="Assigned programs" value={data.programs.length} />
@@ -43,7 +44,7 @@ function Inner() {
         <Stat label="Reviewed" value={reviewed.length} />
       </div>
       <Section title="Pending submissions">
-        <SubmissionTable subs={pending} titles={titles} programs={data.progMap} empty="Nothing waiting for review 🎉" />
+        <SubmissionTable subs={pending} titles={titles} programs={data.progMap} empty="Nothing waiting for review" />
       </Section>
       <Section title="Assigned programs">
         <div className="grid-cards">

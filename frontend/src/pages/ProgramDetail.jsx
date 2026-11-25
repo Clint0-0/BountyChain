@@ -6,6 +6,7 @@ import { useAsync, loadProgram, loadProgramFunding } from "../lib/hooks";
 import { fmtEth, fmtDate, programPhase, SEVERITY, iface } from "../lib/contract";
 import { PhaseBadge, Badge, Addr, Loading, ErrorBox, Empty, Section, CopyText } from "../components/ui";
 import EventList from "../components/EventList";
+import Icon from "../components/icons";
 
 export default function ProgramDetail() {
   const { id } = useParams();
@@ -33,9 +34,9 @@ export default function ProgramDetail() {
           <div className="row gap">
             <PhaseBadge phase={phase} />
             {p.meta ? (
-              p.meta._verified ? <Badge tone="success" title="keccak256(metadata) matches on-chain metadataHash">✔ Metadata integrity verified</Badge> : <Badge tone="danger">✖ Metadata hash mismatch</Badge>
+              p.meta._verified ? <Badge tone="success" title="keccak256(metadata) matches on-chain metadataHash"><Icon name="check" size={13} /> Metadata integrity verified</Badge> : <Badge tone="danger"><Icon name="x" size={13} /> Metadata hash mismatch</Badge>
             ) : (
-              <Badge tone="warn" title={p.metaWarning}>{p.metaWarning ? "⚠ Metadata owner mismatch" : "Off-chain metadata unavailable"}</Badge>
+              <Badge tone="warn" title={p.metaWarning}>{p.metaWarning ? "Metadata owner mismatch" : "Off-chain metadata unavailable"}</Badge>
             )}
             <span className="muted">Owner</span> <Addr address={p.owner} />
           </div>
@@ -62,20 +63,20 @@ export default function ProgramDetail() {
                 <dt>Rules &amp; guidelines</dt><dd className="pre">{p.meta.rules}</dd>
               </dl>
             ) : (
-              <Empty title="Details unavailable" icon="⚠">{p.metaWarning || `The backend did not return metadata for hash ${p.metadataHash}.`}</Empty>
+              <Empty title="Details unavailable" icon="alert">{p.metaWarning || `The backend did not return metadata for hash ${p.metadataHash}.`}</Empty>
             )}
           </Section>
           <Section title="Submit a vulnerability report">
             {!account ? (
-              <Empty title="Connect your wallet to submit" icon="🔌" />
+              <Empty title="Connect your wallet to submit" icon="wallet" />
             ) : !correctNetwork ? (
-              <Empty title="Wrong network" icon="⛓"><button className="btn btn-primary" onClick={switchNetwork}>Switch network</button></Empty>
+              <Empty title="Wrong network" icon="chain"><button className="btn btn-primary" onClick={switchNetwork}>Switch network</button></Empty>
             ) : phase !== "Open" ? (
-              <Empty title={`Program is ${phase.toLowerCase()}`} icon="⏸">Submissions are only accepted while the program is active and within its dates.</Empty>
+              <Empty title={`Program is ${phase.toLowerCase()}`} icon="pause">Submissions are only accepted while the program is active and within its dates.</Empty>
             ) : isOwner || isProgVerifier ? (
-              <Empty title="Conflict of interest" icon="⛔">Program owners and their verifiers cannot submit reports to this program.</Empty>
+              <Empty title="Conflict of interest" icon="lock">Program owners and their verifiers cannot submit reports to this program.</Empty>
             ) : roles.isAdmin ? (
-              <Empty title="Admin wallet" icon="⛔">Use a researcher wallet to submit reports.</Empty>
+              <Empty title="Admin wallet" icon="lock">Use a researcher wallet to submit reports.</Empty>
             ) : (
               <SubmitReportForm programId={p.id} />
             )}
@@ -166,7 +167,7 @@ function SubmitReportForm({ programId }) {
   return (
     <form className="form" onSubmit={submit} noValidate>
       <div className="alert alert-info small">
-        🔒 Full report content is encrypted (AES-256-GCM) and stored off-chain. Only its keccak256 hash, your address and timestamps go on the blockchain.
+        <Icon name="lock" size={14} /> Full report content is encrypted (AES-256-GCM) and stored off-chain. Only its keccak256 hash, your address and timestamps go on the blockchain.
       </div>
       {FIELDS.map((f) => (
         <label key={f.k} className="field">

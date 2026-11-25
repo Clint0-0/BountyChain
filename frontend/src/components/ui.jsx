@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { short, explorerTx, explorerAddress, STATUS_LABEL } from "../lib/contract";
 import { useWeb3 } from "../context/Web3Context";
+import Icon from "./icons";
 
 export function Badge({ children, tone = "neutral", title }) {
   return (
@@ -40,7 +41,7 @@ export function CopyText({ text, display }) {
         }).catch(() => {});
       }}
     >
-      {display || short(text)} {ok ? "✓" : ""}
+      {display || short(text)} <Icon name={ok ? "check" : "copy"} size={12} />
     </button>
   );
 }
@@ -70,17 +71,17 @@ export function TxHash({ hash }) {
   const link = explorerTx(chainId, hash);
   return link ? (
     <a className="mono" href={link} target="_blank" rel="noreferrer">
-      {short(hash, 6)} ↗
+      {short(hash, 6)} <Icon name="external" size={12} />
     </a>
   ) : (
     <CopyText text={hash} display={short(hash, 6)} />
   );
 }
 
-export function Empty({ title, children, icon = "◇" }) {
+export function Empty({ title, children, icon = "grid" }) {
   return (
     <div className="empty">
-      <div className="empty-icon">{icon}</div>
+      <div className="empty-icon"><Icon name={icon} size={26} /></div>
       <h3>{title}</h3>
       {children && <p className="muted">{children}</p>}
     </div>
@@ -115,13 +116,13 @@ export function Gate({ need, roleName, children }) {
   const { account, correctNetwork, connect, switchNetwork, roles, hasMetaMask } = useWeb3();
   if (!hasMetaMask)
     return (
-      <Empty title="MetaMask required" icon="🦊">
+      <Empty title="MetaMask required" icon="wallet">
         Install the MetaMask extension to interact with BountyChain.
       </Empty>
     );
   if (!account)
     return (
-      <Empty title="Connect your wallet" icon="🔌">
+      <Empty title="Connect your wallet" icon="wallet">
         <button className="btn btn-primary" onClick={connect}>
           Connect MetaMask
         </button>
@@ -129,7 +130,7 @@ export function Gate({ need, roleName, children }) {
     );
   if (!correctNetwork)
     return (
-      <Empty title="Wrong network" icon="⛓">
+      <Empty title="Wrong network" icon="chain">
         <button className="btn btn-primary" onClick={switchNetwork}>
           Switch network
         </button>
@@ -138,7 +139,7 @@ export function Gate({ need, roleName, children }) {
   if (need && !roles.loaded) return <Loading text="Reading your on-chain roles…" />;
   if (need && !need(roles))
     return (
-      <Empty title="Not authorized" icon="⛔">
+      <Empty title="Not authorized" icon="lock">
         The connected wallet does not hold the on-chain <b>{roleName}</b> role. The smart contract would reject these actions.{" "}
         <Link to="/">Back home</Link>
       </Empty>

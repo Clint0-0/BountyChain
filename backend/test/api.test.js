@@ -30,6 +30,7 @@ function mockChain() {
   return {
     state,
     chainId: 31337,
+    now: async () => state.now ?? Math.floor(Date.now() / 1000),
     address: "0x0000000000000000000000000000000000000001",
     isOrganization: async (x) => state.orgs.has(x.toLowerCase()),
     disputeResolver: async () => state.resolver,
@@ -151,6 +152,8 @@ describe("report storage", () => {
     chain.state.programs[1].active = true;
     chain.state.programs[1].startTime = 4102444000; // not started yet
     await bad({}).expect(400);
+    chain.state.now = 4102444100; // chain clock ahead of wall clock -> uses chain time
+    await bad({}).expect(201);
   });
 
   test("program owner and program verifiers cannot submit reports", async () => {

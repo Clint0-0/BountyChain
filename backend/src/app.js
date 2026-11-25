@@ -138,8 +138,9 @@ function createApp({ db, chain, config }) {
       const b = req.body || {};
       const programId = positiveInt(b.programId, "programId");
       const program = await chain.getProgram(programId);
-      const now = Math.floor(Date.now() / 1000);
       if (!program) throw httpError(404, "Program not found on-chain");
+      // use chain time, not wall-clock time (local chains can drift ahead)
+      const now = chain.now ? await chain.now() : Math.floor(Date.now() / 1000);
       if (!program.active || now < program.startTime || now > program.endTime) throw httpError(400, "Program is not accepting submissions");
       if (program.owner === req.user || (await chain.isVerifier(programId, req.user))) {
         throw httpError(403, "Program owner and its verifiers cannot submit reports to it");

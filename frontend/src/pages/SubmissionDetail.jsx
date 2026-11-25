@@ -8,6 +8,7 @@ import { useAsync, loadProgram, loadDispute, loadSubmissionTimeline } from "../l
 import { toSubmission, fmtEth, fmtDate, SEVERITY, ZERO_ADDR } from "../lib/contract";
 import { StatusBadge, SeverityBadge, Addr, Badge, Loading, ErrorBox, Section, CopyText, Gate } from "../components/ui";
 import EventList from "../components/EventList";
+import Icon from "../components/icons";
 
 export default function SubmissionDetail() {
   return (
@@ -126,7 +127,7 @@ function ReportPanel({ submissionId, canTry }) {
   return (
     <Section
       title="Confidential report"
-      actions={<button className="btn btn-outline btn-sm" onClick={load} disabled={state.loading}>{state.data ? "Reload" : "🔓 Decrypt & view"}</button>}
+      actions={<button className="btn btn-outline btn-sm" onClick={load} disabled={state.loading}>{state.data ? "Reload" : <><Icon name="unlock" size={15} /> Decrypt & view</>}</button>}
     >
       {!state.data && !state.error && (
         <p className="muted">
@@ -141,9 +142,9 @@ function ReportPanel({ submissionId, canTry }) {
         <div className="report">
           <div className="row gap">
             {state.data.integrity.verified ? (
-              <Badge tone="success" title={`computed ${state.data.integrity.computedHash}`}>✔ Integrity verified against on-chain hash</Badge>
+              <Badge tone="success" title={`computed ${state.data.integrity.computedHash}`}><Icon name="check" size={13} /> Integrity verified against on-chain hash</Badge>
             ) : (
-              <Badge tone="danger">✖ Integrity check FAILED</Badge>
+              <Badge tone="danger"><Icon name="x" size={13} /> Integrity check failed</Badge>
             )}
             <span className="muted small">Access as: {state.data.roles.join(", ")}</span>
           </div>
@@ -167,7 +168,7 @@ function ReportPanel({ submissionId, canTry }) {
                     <b>{DOC_LABEL[d.kind]}</b>
                     <Addr address={d.author} />
                     <span className="muted">{new Date(d.createdAt).toLocaleString()}</span>
-                    {d.anchoredOnChain ? <Badge tone="success">⛓ anchored on-chain</Badge> : <Badge>draft (not on-chain)</Badge>}
+                    {d.anchoredOnChain ? <Badge tone="success"><Icon name="chain" size={13} /> Anchored on-chain</Badge> : <Badge>draft (not on-chain)</Badge>}
                   </div>
                   <p className="pre">{d.content}</p>
                 </div>

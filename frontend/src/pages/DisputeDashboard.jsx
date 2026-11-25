@@ -3,6 +3,7 @@ import { useAsync, loadSubmissions, loadDispute } from "../lib/hooks";
 import { useTitles } from "../lib/useTitles";
 import { Gate, Section, Stat, Loading, ErrorBox } from "../components/ui";
 import SubmissionTable from "../components/SubmissionTable";
+import Icon from "../components/icons";
 
 export default function DisputeDashboard() {
   return (
@@ -35,7 +36,7 @@ function Inner() {
           <h1>Dispute resolution</h1>
           <p className="muted">Researchers can dispute rejected reports. Your final decision is written to the contract.</p>
         </div>
-        {!unlocked && data.subs.length > 0 && <button className="btn btn-outline" onClick={() => unlock().catch(() => {})}>🔓 Unlock report titles</button>}
+        {!unlocked && data.subs.length > 0 && <button className="btn btn-outline" onClick={() => unlock().catch(() => {})}><Icon name="unlock" size={15} /> Unlock report titles</button>}
       </div>
       <div className="stats">
         <Stat label="Open disputes" value={open.length} />

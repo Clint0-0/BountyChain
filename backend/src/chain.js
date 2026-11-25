@@ -20,6 +20,10 @@ function createChainReader({ rpcUrl, contractFile }) {
     address: dep.address,
     provider,
     chainId: dep.chainId,
+    /** Latest block timestamp: the same clock the contract uses for program windows. */
+    async now() {
+      return (await provider.getBlock("latest")).timestamp;
+    },
     async isOrganization(addr) {
       return c.isOrganization(addr);
     },

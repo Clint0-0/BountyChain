@@ -103,7 +103,7 @@ function Inner() {
                 </table>
               </div>
             ) : (
-              <Empty title="No organizations registered yet" icon="🏢" />
+              <Empty title="No organizations registered yet" icon="building" />
             )}
           </Section>
           <Section title="Bounty programs">
@@ -126,7 +126,7 @@ function Inner() {
                   </tbody>
                 </table>
               </div>
-            ) : programs.loading ? <Loading /> : <Empty title="No programs yet" icon="🛡" />}
+            ) : programs.loading ? <Loading /> : <Empty title="No programs yet" icon="shield" />}
           </Section>
         </div>
         <div className="col-side">

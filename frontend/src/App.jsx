@@ -1,5 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Layout from "./components/Layout";
 import Toasts from "./components/Toasts";
 import Home from "./pages/Home";
 import Programs from "./pages/Programs";
@@ -17,13 +17,12 @@ export default function App() {
   const { error, setError } = useWeb3();
   return (
     <>
-      <Navbar />
+      <Layout>
       {error && (
         <div className="banner">
           {error} <button className="btn btn-ghost btn-sm" onClick={() => setError(null)}>×</button>
         </div>
       )}
-      <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/programs" element={<Programs />} />
@@ -34,10 +33,9 @@ export default function App() {
           <Route path="/verifier" element={<VerifierDashboard />} />
           <Route path="/disputes" element={<DisputeDashboard />} />
           <Route path="/admin" element={<AdminPanel />} />
-          <Route path="*" element={<div className="page"><Empty title="Page not found" icon="404"><Link to="/">Go home</Link></Empty></div>} />
+          <Route path="*" element={<div className="page"><Empty title="Page not found" icon="alert"><Link to="/">Go home</Link></Empty></div>} />
         </Routes>
-      </main>
-      <footer className="footer muted small">BountyChain · academic blockchain demonstration · not audited for production use</footer>
+      </Layout>
       <Toasts />
     </>
   );

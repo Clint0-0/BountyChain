@@ -7,6 +7,7 @@ import { fmtEth } from "../lib/contract";
 import { Gate, Section, Stat, Loading, ErrorBox } from "../components/ui";
 import SubmissionTable from "../components/SubmissionTable";
 import EventList from "../components/EventList";
+import Icon from "../components/icons";
 
 export default function MySubmissions() {
   return (
@@ -44,7 +45,7 @@ function Inner() {
           <p className="muted">Reports submitted from this wallet. Status and rewards are read from the contract.</p>
         </div>
         <div className="row gap">
-          {!unlocked && subs.length > 0 && <button className="btn btn-outline" onClick={() => unlock().catch(() => {})}>🔓 Unlock report titles</button>}
+          {!unlocked && subs.length > 0 && <button className="btn btn-outline" onClick={() => unlock().catch(() => {})}><Icon name="unlock" size={15} /> Unlock report titles</button>}
           <Link className="btn btn-primary" to="/programs">Find a program</Link>
         </div>
       </div>

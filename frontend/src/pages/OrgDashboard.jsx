@@ -8,6 +8,7 @@ import { useTitles } from "../lib/useTitles";
 import { fmtEth, fmtDate, programPhase, SEVERITY } from "../lib/contract";
 import { Gate, Section, Stat, Loading, ErrorBox, Empty, PhaseBadge, Addr } from "../components/ui";
 import SubmissionTable from "../components/SubmissionTable";
+import Icon from "../components/icons";
 
 export default function OrgDashboard() {
   return (
@@ -53,7 +54,7 @@ function Inner() {
       {programs.length ? (
         programs.map((p) => <ManageProgram key={p.id} p={p} />)
       ) : (
-        <Empty title="No programs yet" icon="🛡">Create your first bounty program and fund its reward pool.</Empty>
+        <Empty title="No programs yet" icon="shield">Create your first bounty program and fund its reward pool.</Empty>
       )}
     </div>
   );
@@ -196,7 +197,7 @@ function ManageProgram({ p }) {
             {fmtDate(p.startTime)} → {fmtDate(p.endTime)} · {p.submissionCount} reports · {p.openItems} awaiting action
           </div>
         </div>
-        <button className="btn btn-ghost" onClick={() => setOpen(!open)}>{open ? "Hide ▲" : "Manage ▼"}</button>
+        <button className="btn btn-ghost" onClick={() => setOpen(!open)}>{open ? "Hide" : "Manage"}</button>
       </div>
       <div className="pool">
         <div><span className="muted">Available</span><b>{fmtEth(p.availableBalance)}</b></div>
@@ -216,7 +217,7 @@ function ManageProgram({ p }) {
             </div>
             <div className="mini">
               <h4>Status</h4>
-              <button className={`btn btn-sm ${p.active ? "btn-danger" : "btn-success"}`} onClick={() => tx(`${p.active ? "Deactivate" : "Activate"} program #${p.id}`, () => writeContract.setProgramActive(p.id, !p.active))}>
+              <button className={`btn btn-sm ${p.active ? "btn-danger-outline" : "btn-success"}`} onClick={() => tx(`${p.active ? "Deactivate" : "Activate"} program #${p.id}`, () => writeContract.setProgramActive(p.id, !p.active))}>
                 {p.active ? "Deactivate program" : "Re-activate program"}
               </button>
             </div>
@@ -258,7 +259,7 @@ function ManageProgram({ p }) {
               </div>
               <div className="row between">
                 <h4>Submitted reports</h4>
-                {!unlocked && details.data.subs.length > 0 && <button className="btn btn-ghost btn-sm" onClick={() => unlock().catch(() => {})}>🔓 Unlock titles</button>}
+                {!unlocked && details.data.subs.length > 0 && <button className="btn btn-ghost btn-sm" onClick={() => unlock().catch(() => {})}><Icon name="unlock" size={15} /> Unlock titles</button>}
               </div>
               <SubmissionTable subs={details.data.subs} titles={titles} programs={{ [p.id]: p }} />
             </>

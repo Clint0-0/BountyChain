@@ -11,6 +11,12 @@ Academic Blockchain Technology mini-project. Organizations lock bounty rewards i
 
 Full academic write-up (architecture, diagrams, schema, security, limitations): **[docs/PROJECT_REPORT.md](docs/PROJECT_REPORT.md)** · Viva demo script: **[docs/DEMO_CHECKLIST.md](docs/DEMO_CHECKLIST.md)**
 
+| Overview | Bounty programs |
+|---|---|
+| ![Overview](docs/screenshots/overview.png) | ![Programs](docs/screenshots/programs.png) |
+| **Report details** | **Organization console** |
+| ![Report](docs/screenshots/report-details.png) | ![Organization](docs/screenshots/organization.png) |
+
 ```
 bountychain/
 ├── blockchain/   contracts/BountyPlatform.sol, test/, scripts/deploy.js, hardhat.config.js

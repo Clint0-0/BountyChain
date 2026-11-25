@@ -22,7 +22,7 @@ function SetupNeeded() {
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {deployment ? (
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Web3Provider>
           <TxProvider>
             <App />
